@@ -3,7 +3,10 @@ import exp_array_creator as eac
 import math
 import numpy as np
 import csv
+import time
 
+
+now = time.time()
 # Iterating for each element
 
 exp_count = [] 
@@ -86,9 +89,20 @@ for length in np.nditer(eac.length_array):
 									((X_freq / kn_freq) * (np.sinh(k_freq) * np.sin(l_freq))))
 
 								Solver.append(Solv)
+
+								omega_freq_axial_load = []
+								for a, b in zip(Solver, Solver[1:]):
+									if a <= 1 and b > 1:
+										omega_freq_axial_load = omega
+										break
+									elif a >= 1 and b < 1:
+										omega_freq_axial_load = omega
+										break	
+									else:
+										continue
 								
-
-
+								print omega_freq_axial_load
+print (time.time() - now)
 
 
 csv_list = [exp_count, length_array, width_array, height_array,
