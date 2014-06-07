@@ -1,3 +1,8 @@
+"""
+Length order should be either 3 or 6
+"""
+
+
 import constants as co # use constants as co.E
 import array_creator as ac # use arrays as ac.length_array
 import nominal_frequency as nf # nominal frequency calculator
@@ -9,25 +14,24 @@ import numpy as np
 import csv
 
 # Empty list creations
-exp_count = []
-length_exp = []
-width_exp = []
-height_exp = []
-gap_exp = []
-bias_exp = []
-stress_exp = []
-load_exp = []
-nominal_freq_exp = []
-bao_freq_exp = [] 
-axial_load_exp = []
-softened_freq_exp = []
-eta_exp = []
-R_exp = []
-L_exp = []
-C_exp = []
+exp_count = ["Experimental Design"]
+length_exp = ["Length (m)"]
+width_exp = ["Width (m)"]
+height_exp = ["Height (m)"]
+gap_exp = ["Electrode - Wire Gap (m)"]
+bias_exp = ["Bias Voltage (V)"]
+stress_exp = ["Applied Stress (Pa)"]
+load_exp = ["Applied Load (N)"]
+nominal_freq_exp = ["Nominal Frequency (Hz)"]
+bao_freq_exp = ["Bao Frequency (Hz)"] 
+axial_load_exp = ["Axial Load Frequency (Hz)"]
+softened_freq_exp = ["Electrical Softeneed Frequency (Hz)"]
+eta_exp = ["Eta Value"]
+R_exp = ["R Value (Ohm)"]
+L_exp = ["L Value (H)"]
+C_exp = ["C Value (F)"]
 
 exp_num = 0
-iteration = [0, 1]
 
 # List filling and iterator on experimental designs
 for length in np.nditer(ac.length_array):
@@ -36,7 +40,7 @@ for length in np.nditer(ac.length_array):
 			for gap in np.nditer(ac.gap_array):
 				for bias in np.nditer(ac.bias_array):
 					for stress in np.nditer(ac.stress_array):
-
+						
 						# Each calculation is an experimental design
 						# Exp_num only dictates which experimental design is running
 						exp_num += 1
@@ -69,10 +73,16 @@ for length in np.nditer(ac.length_array):
 							length, co.E, I)
 						bao_freq_exp.append(bao_frequency)
 
+						length_order = np.ceil(abs(np.log10(length)))
+
+						if length_order == 3:
+							iteration = [0, 1, 2]
+						elif length_order == 6:
+							iteration = [0, 1, 2, 3, 4, 5, 6]
 
 						# iteration count starts from 0
-						for iteration_count in iteration:
-							
+						for iteration_count in iteration:	
+
 							# Feeding the iteration base point to the iterator
 							if iteration_count == 0:
 								freq = bao_frequency * 2 * np.pi
@@ -82,7 +92,7 @@ for length in np.nditer(ac.length_array):
 							# Getting iteration values based on the iteration count
 							# 			===>iteration_start, iteration_finish, step 
 							step, iter_start, iter_finish = iStep.iterator_step(
-								freq, iteration_count)
+								freq, iteration_count, length_order)
 							
 							# Creating Loop list for iterator process
 							Loop = np.arange(iter_start, iter_finish, step)
@@ -110,6 +120,7 @@ for length in np.nditer(ac.length_array):
 						L_exp.append(L)
 						C_exp.append(C)
 
+						print "Experimental Design #%d is completed" % exp_num
 
 csv_list = [exp_count, length_exp, width_exp, height_exp, gap_exp, bias_exp, stress_exp, 
 	load_exp, nominal_freq_exp, bao_freq_exp, axial_load_exp, softened_freq_exp, eta_exp, 
@@ -119,4 +130,3 @@ with open("output.txt", "a") as outputtxt:
 	writer = csv.writer(outputtxt, delimiter = ',', lineterminator = '\n')
 	for item in csv_list:
 		writer.writerow(item)
-

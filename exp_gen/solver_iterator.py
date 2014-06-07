@@ -32,8 +32,6 @@ def solver_iterator(Loop, X_value, Y_value):
 				axial_load_frequency = omega / (2 * np.pi)
 				return axial_load_frequency
 				break
-			else:
-				continue	
 
 
 
