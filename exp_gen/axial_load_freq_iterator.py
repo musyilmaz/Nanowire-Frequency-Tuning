@@ -75,11 +75,9 @@ for length in np.nditer(ac.length_array):
 
 						length_order = np.ceil(abs(np.log10(length)))
 
-						if length_order == 3:
-							iteration = [0, 1, 2]
-						elif length_order == 6:
-							iteration = [0, 1, 2, 3, 4, 5, 6]
-
+						
+						iteration = [0, 1, 2, 3, 4]
+					
 						# iteration count starts from 0
 						for iteration_count in iteration:	
 
